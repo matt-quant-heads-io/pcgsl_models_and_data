@@ -508,11 +508,11 @@ goal_set_size = 50
 obs_size = 22 # after 22 len 10 and 30 run 15, 9, 5 on both ep lens 10 and 30
 episode_len = 10
 obs_ep_comobs = [(22, 10), (22, 30), (15, 10), (15,30), (9, 10), (9, 30), (5, 10), (5, 30)]
-dict_len = ((obs_size**2)*8)
-total_steps = 0
 rng, seed = np_random(None)
 filepath = 'playable_maps/zelda_lvl{}.txt'
 for obs_size, episode_len in obs_ep_comobs:
+    dict_len = ((obs_size**2)*8)
+    total_steps = 0
     while total_steps <= 962500:
         for idx in range(goal_set_size):
             exp_traj_dict = {f"col_{i}": [] for i in range(dict_len)}
