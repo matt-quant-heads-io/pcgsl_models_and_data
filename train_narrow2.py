@@ -43,7 +43,7 @@ dfs = []
 
 # for file in df_files:
 for file in os.listdir(f"exp_traj_obs_{obs_size}_ep_len_{ep_len}_goal_size_{goal_map_size}"):
-    dfs.append(pd.read_csv(file))
+    dfs.append(pd.read_csv(f"exp_traj_obs_{obs_size}_ep_len_{ep_len}_goal_size_{goal_map_size}/{file}"))
 # #
 # # print(f"here2")
 df = pd.concat(dfs) #pd.read_csv('narrow_td_onehot_obs_1_goal_lg.csv')
