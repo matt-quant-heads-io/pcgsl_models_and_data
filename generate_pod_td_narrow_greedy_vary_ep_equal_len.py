@@ -296,7 +296,7 @@ def generate_play_trace_narrow_greedy(env, random_map, goal_map, total_steps, ep
     episode_len = ep_len #random.randint(1, 77)
     env.reset()
     env.reset()
-    while hamm > 0.0 and curr_step < episode_len and curr_step < total_steps:
+    while hamm > 0.0 and curr_step < episode_len and curr_step <= total_steps:
         new_map = old_map.copy()
         transition_info_at_step = [None, None, None]  # [current map, destructive_action, expert_action]
         # row_idx, col_idx = random.randint(0, len(map) - 1), random.randint(0, len(map[0]) - 1) # current_loc[1], current_loc[0]
