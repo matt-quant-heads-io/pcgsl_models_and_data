@@ -296,7 +296,7 @@ def generate_play_trace_narrow_greedy(env, random_map, goal_map, total_steps, ep
     episode_len = ep_len #random.randint(1, 77)
     env.reset()
     env.reset()
-    while hamm > 0.0 and curr_step <= episode_len and curr_step < total_steps:
+    while hamm > 0.0 and curr_step < episode_len and curr_step < total_steps:
         new_map = old_map.copy()
         transition_info_at_step = [None, None, None]  # [current map, destructive_action, expert_action]
         # row_idx, col_idx = random.randint(0, len(map) - 1), random.randint(0, len(map[0]) - 1) # current_loc[1], current_loc[0]
@@ -411,7 +411,7 @@ filepath = 'playable_maps/zelda_lvl{}.txt'
 for obs_size, episode_len in obs_ep_comobs:
     dict_len = ((obs_size**2)*8)
     total_steps = 0
-    while total_steps <= 962500:
+    while total_steps < 962500:
         for idx in range(goal_set_size):
             exp_traj_dict = {f"col_{i}": [] for i in range(dict_len)}
             exp_traj_dict["target"] = []
