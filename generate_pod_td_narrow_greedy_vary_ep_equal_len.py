@@ -276,8 +276,8 @@ def generate_play_trace_narrow_greedy(env, random_map, goal_map, total_steps, ep
     current_loc = [random.randint(0, len(random_map) - 1), random.randint(0, len(random_map[0]) - 1)]
     # env._rep.reset(3, 3, {0: 0.58, 1: 0.3, 2: 0.02, 3: 0.02, 4: 0.02, 5: 0.02, 6: 0.02, 7: 0.02})
     env._rep._old_map = np.array([np.array(l) for l in random_map])  # np.ndarray(map.copy(), shape=(len(map), len(map[0])), ndim=2).astype(np.uint8)
-    env._rep._x = current_loc[0] # 0
-    env._rep._y = current_loc[1] # 0
+    env._rep._x = current_loc[1] # 0
+    env._rep._y = current_loc[0] # 0
     row_idx, col_idx = env._rep._y, env._rep._x #0, 0
     tile_count = 0
 
