@@ -46,7 +46,7 @@ for file in os.listdir(f"exp_traj_obs_{obs_size}_ep_len_{ep_len}_goal_size_{goal
     dfs.append(pd.read_csv(f"exp_traj_obs_{obs_size}_ep_len_{ep_len}_goal_size_{goal_map_size}/{file}"))
 # #
 # # print(f"here2")
-df = pd.concat(dfs) #pd.read_csv('narrow_td_onehot_obs_1_goal_lg.csv')
+df = pd.concat(dfs)[:962500] #pd.read_csv('narrow_td_onehot_obs_1_goal_lg.csv')
 # df = pd.read_csv('narrow_td_onehot_obs_50_goals_25_starts.csv')
 print(f"df shape: rows: {df.shape[0]} cols: {df.shape[1]}")
 print(f"{df.head()}")
