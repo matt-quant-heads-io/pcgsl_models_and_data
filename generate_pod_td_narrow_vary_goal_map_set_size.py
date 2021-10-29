@@ -3,7 +3,7 @@ import os
 
 from gym_pcgrl.envs.probs.zelda_prob import ZeldaProblem
 from gym_pcgrl.envs.reps.narrow_rep import NarrowRepresentation
-from gym.envs.classic_control import rendering
+#from gym.envs.classic_control import rendering
 from gym_pcgrl.envs.reps import REPRESENTATIONS
 from gym_pcgrl.envs.pcgrl_env import PcgrlEnv
 
@@ -36,109 +36,6 @@ pp = pprint.PrettyPrinter(indent=4)
 #     os.makedirs(path_dir.format(idx))
 
 ################################################
-
-
-def generate_play_trace_narrow(map, prob, rep, actions_list, render=False):
-    """
-        The "no-change" action  is 1 greater than the number of tile types (value is 8)
-
-
-    """
-
-    play_trace = []
-    # loop through from 0 to 13 (for 14 tile change actions)
-    old_map = map.copy()
-    actions_list = [i for i in range(8)]
-
-    # Insert the goal state into the play trace
-    play_trace.insert(0, [old_map, None, None])
-
-    count = 0
-    current_loc = [random.randint(0, len(map) - 1), random.randint(0, len(map[0]) - 1)] # [0, 0]
-    tile_changes = 0
-    tile_visits = 0
-
-    rep._old_map = np.array([np.array(l) for l in map])# np.ndarray(map.copy(), shape=(len(map), len(map[0])), ndim=2).astype(np.uint8)
-    rep.reset(11, 7, {0: 0.58, 1: 0.3, 2: 0.02, 3: 0.02, 4: 0.02, 5: 0.02, 6: 0.02, 7: 0.02})
-    rep._x = current_loc[0] # 0
-    rep._y = current_loc[1] # 0
-
-    # Render starting map
-    # if render:
-    #     map_img = render_map(str_arr_from_int_arr(old_map), prob, rep, ret_image=True)
-    #     ren = rendering.SimpleImageViewer()
-    #     ren.imshow(map_img)
-    #     # input(f'')
-    #     time.sleep(0.3)
-    #     ren.close()
-
-    # Initialize start at 0,0
-
-    # rep._x = 0
-    # rep._y = 0
-
-    tile_visits = 0
-    row_idx, col_idx = 0, 0
-
-    while tile_changes < 60:
-        new_map = old_map.copy()
-        transition_info_at_step = [None, None, None]  # [current map, destructive_action, expert_action]
-        # row_idx, col_idx = random.randint(0, len(map) - 1), random.randint(0, len(map[0]) - 1) # current_loc[1], current_loc[0]
-        rep._x = col_idx
-        rep._y = row_idx
-        # print(f"position ({current_loc[0], current_loc[1]})")
-        new_map[row_idx] = old_map[row_idx].copy()
-        old_tile_type = new_map[row_idx][col_idx]
-        # print(f"old_tile_type is {old_tile_type}")
-        next_actions = [j for j in actions_list if j != old_tile_type] + ["No-change"]*27
-        new_tile_type = random.choice(next_actions)
-        if new_tile_type == "No-change":
-            new_tile_type = old_tile_type
-        else:
-            tile_changes += 1
-
-        destructive_action = [row_idx, col_idx, new_tile_type]
-        expert_action = [row_idx, col_idx, old_tile_type]
-        transition_info_at_step[1] = destructive_action.copy()
-        transition_info_at_step[2] = expert_action.copy()
-        new_map[row_idx][col_idx] = new_tile_type
-        transition_info_at_step[0] = new_map.copy()
-        play_trace.insert(0, transition_info_at_step.copy())
-
-        tile_visits += 1
-
-
-        # Update position
-        # current_loc[0] += 1
-        # rep._x += 1
-        # if current_loc[0] >= rep._map.shape[1]:
-        #     current_loc[0] = 0
-        #     current_loc[1] += 1
-        #     rep._x = 0
-        #     rep._y += 1
-        #     if current_loc[1] >= rep._map.shape[0]:
-        #         current_loc[1] = 0
-        #         rep._y = 0
-
-        old_map = new_map
-
-        # Render
-        # if render:
-        #     map_img = render_map(str_arr_from_int_arr(new_map), prob, rep, ret_image=True)
-        #     ren = rendering.SimpleImageViewer()
-        #     ren.imshow(map_img)
-        #     # input(f'')
-        #     time.sleep(0.3)
-        #     ren.close()
-
-        col_idx += 1
-        if col_idx >= 11:
-            col_idx = 0
-            row_idx += 1
-            if row_idx >= 7:
-                row_idx = 0
-
-    return play_trace
 
 
 # # TODO: Need to change this for Turtle and Narrow Reps
@@ -362,7 +259,7 @@ def generate_play_trace_narrow_greedy(env, random_map, goal_map, total_steps, ep
     env._rep._old_map = np.array([np.array(l) for l in random_map])  # np.ndarray(map.copy(), shape=(len(map), len(map[0])), ndim=2).astype(np.uint8)
     env._rep._x = current_loc[0] # 0
     env._rep._y = current_loc[1] # 0
-    row_idx, col_idx = 0, 0
+    row_idx, col_idx = env._rep._y, env._rep._x #0, 0
     tile_count = 0
 
 
@@ -380,7 +277,7 @@ def generate_play_trace_narrow_greedy(env, random_map, goal_map, total_steps, ep
     episode_len = ep_len #random.randint(1, 77)
     env.reset()
     env.reset()
-    while hamm > 0.0 and curr_step <= episode_len:
+    while hamm > 0.0 and curr_step < episode_len and curr_step < total_steps:
         new_map = old_map.copy()
         transition_info_at_step = [None, None, None]  # [current map, destructive_action, expert_action]
         # row_idx, col_idx = random.randint(0, len(map) - 1), random.randint(0, len(map[0]) - 1) # current_loc[1], current_loc[0]
@@ -496,7 +393,7 @@ filepath = 'playable_maps/zelda_lvl{}.txt'
 for obs_size, episode_len, goal_set_size in obs_ep_comobs:
     dict_len = ((obs_size ** 2) * 8)
     total_steps = 0
-    while total_steps <= 962500:
+    while total_steps < 962500:
         for idx in range(goal_set_size):
             exp_traj_dict = {f"col_{i}": [] for i in range(dict_len)}
             exp_traj_dict["target"] = []
